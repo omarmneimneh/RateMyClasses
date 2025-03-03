@@ -17,4 +17,5 @@ This will give you a url that should look like `http://localhost:<###>`
         -`http://localhost:<###>/classes/CS471` or `http://localhost:<###>/classes/Operating%Systems`
     - For CS484:
         -`http://localhost:<###>/classes/CS484` or `http://localhost:<###>/classes/Data%Mining`
+        
 No frontend yet to support this, but should be able to see some JSON responses.

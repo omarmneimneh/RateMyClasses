@@ -20,6 +20,7 @@
       }
     ],
     "paths": {
+      "@firebaseConfig":["src/config/firebase.ts"],
       "@/*": ["./*"]
     }
   },

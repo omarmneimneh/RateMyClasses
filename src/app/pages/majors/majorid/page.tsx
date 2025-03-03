@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Star, StarHalf } from "lucide-react"
 
 export default function MajorClassesPage({ params }: { params: { majorId: string } }) {
-  // In a real app, this would be fetched from Firebase based on the majorId
+
   const majorName = getMajorName(params.majorId)
   const classes = getClassesForMajor(params.majorId)
 

@@ -10,7 +10,6 @@ export async function GET(req: NextRequest, {params}: {params:{classID: string}}
     }
     try{
         const classData = await cc.searchClasses(classID);
-        console.log(classData)
         return classData;
     } catch(e){
         console.error("Error fetching class:", e);

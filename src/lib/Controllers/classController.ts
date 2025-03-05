@@ -1,6 +1,6 @@
-import { db } from "../../config/firebase";
+import { db } from "@/src/config/firebase";
 import { doc, addDoc, collection, query, where, limit, getDocs, getDoc } from "firebase/firestore";
-import { Class } from "../../../backend/Models/Classes";
+import { Class } from "@/src/lib/types";
 import { NextResponse } from "next/server";
 
 class ClassController{
@@ -18,28 +18,28 @@ class ClassController{
      * majorID is retrieved by querying Majors document
      */
 
-    async createClass(req: Request){ 
-        console.log(req.body);
-        const {majorName, className, classCode} = req.body
-        try{
-            const queryForMajor = query(this.majorRef, where("majorName", "==", majorName));
-            const majorID = (await getDocs(queryForMajor)).docs[0].id;
+    // async createClass(req: Request){ 
+    //     console.log(req.body);
+    //     const {majorName, className, classCode} = req.body
+    //     try{
+    //         const queryForMajor = query(this.majorRef, where("majorName", "==", majorName));
+    //         const majorID = (await getDocs(queryForMajor)).docs[0].id;
             
-            const newClass : Class = {
-                majorID: doc(db, "Majors", majorID), 
-                className: className, 
-                classCode: classCode
-            };
-            const addingSnapShot = await addDoc(this.classRef, newClass);
-            if(addingSnapShot.id.length == 0){
-                return 404;
-            }
-            return 200;
+    //         const newClass : Class = {
+    //             majorID: doc(db, "Majors", majorID), 
+    //             className: className, 
+    //             classCode: classCode
+    //         };
+    //         const addingSnapShot = await addDoc(this.classRef, newClass);
+    //         if(addingSnapShot.id.length == 0){
+    //             return 404;
+    //         }
+    //         return 200;
             
-        }catch(e){
-            console.log(e);
-        }
-    };
+    //     }catch(e){
+    //         console.log(e);
+    //     }
+    // };
     
     private async getClassByName(className: string){
         try{
@@ -109,47 +109,25 @@ class ClassController{
     /**
      * returns all classes across majors
     */
-    async getAllClasses(){
-        try{
-            
-            const q = query(this.classRef);
+    async getClassesFromMajor(majorID: string) {
+        try {
+            const majorRef = doc(db, "Majors", majorID);
+            const q = query(this.classRef, where("majorID", "==", majorRef));
             const classSnapShot = await getDocs(q);
-            if (classSnapShot.empty){
-                return NextResponse.json({
-                    "message": "No classes found",
-                    "status": 404
-                });
+
+            if (classSnapShot.empty) {
+                return NextResponse.json({ classInfo: "No classes found" }, { status: 404 });
             }
-
-            const classes = await Promise.all(classSnapShot.docs.map(async (doc) => {
-                const classData = doc.data();
-                let majorData = null;
-                if (classData.majorID) {
-                    const majorRef = classData.majorID;
-                    const majorSnap = await getDoc(majorRef);
-                    
-                    if (majorSnap.exists()) {
-                        majorData = { id: majorSnap.id, ...majorSnap.data() };
-                    }
-                }
-                return {
-                    id: doc.id,
-                    classCode: classData.classCode,
-                    className: classData.className,
-                    major: majorData,
-                };
-            }));
-
+            
             return NextResponse.json({
-                "classes": classes,
-                "status": 200
-            });
-        
-        }catch(error){
-            return NextResponse.json({
-                "message": `Internal error ${error}`,
-                "status": 500  
-            })
+                classInfo: classSnapShot.docs.map((doc) => ({ 
+                    id: doc.id, 
+                    className: doc.data().className,
+                    classCode: doc.data().classCode,
+                    })),
+            }, { status: 200 });
+        } catch (e) {
+            return NextResponse.json({ classInfo: `Internal error: ${e}` }, { status: 500 });
         }
     }
 
@@ -157,27 +135,27 @@ class ClassController{
         try{
             const nameSnapShot = await this.getClassByName(classID);
             const codeSnapShot = await this.getClassByCode(classID);
-            if(nameSnapShot != null){
+            if(nameSnapShot.status == 200){
                 return NextResponse.json({
-                    "classInfo" : nameSnapShot,
-                    "status" : 200
+                    classInfo : nameSnapShot,
+                    status : 200
                 })
             } 
             else if(codeSnapShot != null){
                 return NextResponse.json({
-                    "classInfo" : codeSnapShot,
-                    "status" : 200
+                    classInfo : codeSnapShot,
+                    status : 200
                 })
             }
             else return NextResponse.json({
-                "message": "Class not found",
-                "status": 404
+                classInfo: "Class not found",
+                status: 404
             })
 
         } catch(e){
             console.error("Error fetching class:", e);
             return NextResponse.json({
-                message: `Internal error ${e}`,
+                classInfo: `Internal error ${e}`,
                 status: 500
             });
         }

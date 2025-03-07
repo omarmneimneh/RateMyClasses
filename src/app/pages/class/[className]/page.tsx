@@ -9,12 +9,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Star, StarHalf, ThumbsUp, MessageSquare, Calendar, Clock, Users, BookOpen } from "lucide-react"
-
+import {fetchClassDetails} from "@/src/lib/api"
 export default function ClassDetailsPage({ params }: { params: { classId: string } }) {
   const [activeTab, setActiveTab] = useState("overview")
 
   // In a real app, this would be fetched from Firebase based on the classId
-  const classDetails = getClassDetails(params.classId)
+  const classDetails = fetchClassDetails(params.classId)
   const reviews = getClassReviews(params.classId)
 
   return (
@@ -24,7 +24,7 @@ export default function ClassDetailsPage({ params }: { params: { classId: string
           <span className="font-bold text-xl">RateMyClasses</span>
         </Link>
         <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link href="/majors" className="text-sm font-medium hover:underline underline-offset-4">
+          <Link href="/pages/majors" className="text-sm font-medium hover:underline underline-offset-4">
             Majors
           </Link>
           <Link href="/about" className="text-sm font-medium hover:underline underline-offset-4">
@@ -40,7 +40,7 @@ export default function ClassDetailsPage({ params }: { params: { classId: string
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-2">
-                <Link href="/majors" className="text-sm text-gray-500 hover:underline">
+                <Link href="/pages/majors" className="text-sm text-gray-500 hover:underline">
                   Majors
                 </Link>
                 <span className="text-sm text-gray-500">/</span>
@@ -298,7 +298,7 @@ function getClassDetails(classId: string) {
   }
 
   return (
-    classDetails[classId] || {
+    classDetails[className] || {
       id: "unknown",
       code: "Unknown",
       name: "Unknown Class",

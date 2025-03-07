@@ -8,9 +8,11 @@ export interface Major {
 }
 
 export interface Class {
+  id: string
   majorID: DocumentReference
   className: string
   classCode: string
+  majorName: string
   reviewCount: number
 }
 
@@ -33,7 +35,15 @@ export interface Review {
 //   graduationYear?: string
 // }
 
-export interface majorResponse{
-  majorInfo: []
-  status: number
+export interface MajorClassesPromises{
+  majorInfo: Major | null
+  classes: Class[] | string
+}
+
+export interface AllMajorsPromise{
+  majors: Major[]
+}
+
+export interface ErrorPromise{
+  message: string
 }

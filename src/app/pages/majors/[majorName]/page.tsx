@@ -6,28 +6,24 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Star, StarHalf } from "lucide-react"
-import { fetchMajorDetails } from "@/src/lib/api"
+import { fetchMajorDetails, fetchClassDetails} from "@/src/lib/api"
 import type { Class, Major } from "@/src/lib/types"
 
-export default function MajorClassesPage({ params }: { params: { majorId: string } }) {
-  const [classes, setClasses] = useState<Class[]>([])
-  const [major, setMajor] = useState<Major | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
+export default function MajorClassesPage({ params }: { params: { majorName: string } }) {
+  const [classes, setClasses] = useState<Class[]>([]);
+  const [major, setMajor] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+   
+  //makes sure parameter promises are fulfilled before fetching data and moving on
   useEffect(() => {
     const loadData = async () => {
       try {
         setLoading(true)
-
-        // Fetch major details
-        const majorData = await fetchMajorDetails(params.majorId)
-        setMajor(majorData)
-
-        // Fetch classes for this major
-        const classesData = await fetchMajorDetails(params.majorId)
-        setClasses(classesData)
-
+        const resolvedParams = await params;
+        const majorData = await fetchMajorDetails(resolvedParams.majorName)
+        setMajor(majorData.majorInfo)
+        setClasses(majorData.classes)
         setError(null)
       } catch (err) {
         console.error("Failed to fetch data:", err)
@@ -38,8 +34,7 @@ export default function MajorClassesPage({ params }: { params: { majorId: string
     }
 
     loadData()
-  }, [params.majorId])
-
+  }, [params]);
   return (
     <div className="flex flex-col min-h-screen">
       <header className="px-4 lg:px-6 h-16 flex items-center border-b">
@@ -47,7 +42,7 @@ export default function MajorClassesPage({ params }: { params: { majorId: string
           <span className="font-bold text-xl">RateMyClasses</span>
         </Link>
         <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link href="/majors" className="text-sm font-medium hover:underline underline-offset-4">
+          <Link href="/pages/majors" className="text-sm font-medium hover:underline underline-offset-4">
             Majors
           </Link>
           <Link href="/about" className="text-sm font-medium hover:underline underline-offset-4">
@@ -63,7 +58,7 @@ export default function MajorClassesPage({ params }: { params: { majorId: string
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-2">
-                <Link href="/majors" className="text-sm text-gray-500 hover:underline">
+                <Link href="/pages/majors" className="text-sm text-gray-500 hover:underline">
                   Majors
                 </Link>
                 <span className="text-sm text-gray-500">/</span>
@@ -83,12 +78,11 @@ export default function MajorClassesPage({ params }: { params: { majorId: string
                 <Button
                   onClick={() => {
                     setLoading(true)
-                    fetchMajorDetails(params.majorId)
+                    fetchMajorDetails(params.majorName)
                       .then((majorData) => {
                         setMajor(majorData)
-                        return fetchClasses(majorData.majorName)
+                        setClasses(majorData.classes)
                       })
-                      .then(setClasses)
                       .catch((err) => setError(String(err)))
                       .finally(() => setLoading(false))
                   }}
@@ -107,7 +101,6 @@ export default function MajorClassesPage({ params }: { params: { majorId: string
                           <CardTitle>
                             {classItem.classCode}: {classItem.className}
                           </CardTitle>
-                          <CardDescription>Professor: {classItem.professor || "TBA"}</CardDescription>
                         </div>
                         <Badge variant={getDifficultyVariant(classItem.rating || 0)}>
                           {getDifficultyLabel(classItem.rating || 0)}

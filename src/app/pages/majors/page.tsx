@@ -17,6 +17,7 @@ export default function MajorsPage() {
     const loadMajors = async () => {
       try {
         const data = await fetchMajors()
+        console.log(data.majors);
         setMajors(data)
       } catch (error) {
         console.error("Failed to fetch majors:", error)
@@ -24,10 +25,11 @@ export default function MajorsPage() {
         setLoading(false)
       }
     }
-
     loadMajors()
   }, [])
-
+  useEffect(() => {
+    console.log(majors);
+  }, [majors]);
   if (loading) {
     return <div>Loading...</div>
   }
@@ -36,7 +38,7 @@ export default function MajorsPage() {
     <div className="flex flex-col min-h-screen">
       <header className="px-4 lg:px-6 h-16 flex items-center border-b">
         <Link href="/" className="flex items-center justify-center">
-          <span className="font-bold text-xl">Rate My Classes</span>
+          <span className="font-bold text-xl">RateMyClasses</span>
         </Link>
         <nav className="ml-auto flex gap-4 sm:gap-6">
           <Link href="/page/majors" className="text-sm font-medium hover:underline underline-offset-4">
@@ -89,7 +91,7 @@ export default function MajorsPage() {
         </div>
       </main>
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-        <p className="text-xs text-gray-500 dark:text-gray-400">© 2024 Rate My Classes. All rights reserved.</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400">© 2024 RateMyClasses. All rights reserved.</p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
           <Link href="/terms" className="text-xs hover:underline underline-offset-4">
             Terms of Service

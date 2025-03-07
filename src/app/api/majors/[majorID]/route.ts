@@ -6,8 +6,7 @@ const cc = new ClassController();
 
 export async function GET(req: NextRequest, {params}: {params:{majorID: string}}){
     
-    const majorID = await decodeURIComponent(params.majorID);
-    console.log(majorID);
+    const majorID = await decodeURIComponent( params.majorID.toLowerCase());
     if(!majorID){
         return NextResponse.json({
             "message": "Major name is required",
@@ -15,31 +14,31 @@ export async function GET(req: NextRequest, {params}: {params:{majorID: string}}
         });
     }
     try{
-        const response = await mc.getMajorByName(majorID);
+        const response = await mc.getMajor(majorID);
         const majorSnapShot = await response.json();
         if(majorSnapShot.status!== 200){
             return NextResponse.json({
-                "message": "Major not found",
-                "status": 404
+                message: "Major not found",
+                status: 404
             });
         }
         
         const majorInfo = majorSnapShot.majorInfo;
 
-        const classesResponse = await cc.getClassesFromMajor(majorInfo.id);
+        const classesResponse = await cc.getClassesFromMajor(majorInfo.majorName);
         const classSnapShot = await classesResponse.json();
         const classesInfo = classSnapShot.classInfo;
         
         return NextResponse.json({
-            "majorInfo": majorInfo,
-            "classes": classesInfo
+            majorInfo: majorInfo,
+            classes: classesInfo
         });
 
     } catch(e){
-        console.error("Error fetching class:", e);
+        
         return NextResponse.json({
-            "message": `Internal error ${e}`,
-            "status": 500
+            message: `Internal error ${e}`,
+            status: 500
         });
     }
 }

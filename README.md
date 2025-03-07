@@ -7,15 +7,21 @@
 `npm run dev`
 This will give you a url that should look like `http://localhost:<###>`
 
-## To test classes portion of api
-- To retrieve all classes:
-    - `http://localhost:<###>/api/classes`
-- Currently only 3 classes in database
-    - For CS321:
-        -`http://localhost:<###>/api/classes/CS321` or `http://localhost:<###>/api/classes/Software Engineering`
-    - For CS471:
-        -`http://localhost:<###>/api/classes/CS471` or `http://localhost:<###>/classes/api/Operating Systems`
-    - For CS484:
-        -`http://localhost:<###>/api/classes/CS484` or `http://localhost:<###>/api/classes/Data Mining`
+## API Info
 
-No frontend yet to support this, but should be able to see some JSON responses.
+API endpoints defined in src/app/api
+
+### Testing examples:
+
+- To retrieve all majors:
+    - `http://localhost:<###>/api/majors`
+    - Currently only 1 major in database
+
+- To retrieve different classes:
+    - Current classes in db (classCode/className):
+        - CS471/Operating Systems, CS484/Data Mining, CS321/Software Engineering
+    - Basic command:
+        -`curl -X GET <link> http://localhost:<###>/api/classes/<classCode>` or `http://localhost:<###>/api/classes/<className>`
+
+- Frontend (kinda) supported for same operations. open the localhost port on a browser and click around to mess with it.
+

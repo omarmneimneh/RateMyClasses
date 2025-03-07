@@ -21,7 +21,7 @@ API endpoints defined in src/app/api
     - Current classes in db (classCode/className):
         - CS471/Operating Systems, CS484/Data Mining, CS321/Software Engineering
     - Basic command:
-        -`curl -X GET <link> http://localhost:<###>/api/classes/<classCode>` or `http://localhost:<###>/api/classes/<className>`
+        -`curl -X GET http://localhost:<###>/api/classes/<classCode OR className>`
 
 - Frontend (kinda) supported for same operations. open the localhost port on a browser and click around to mess with it.
 

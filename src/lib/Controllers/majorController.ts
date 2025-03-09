@@ -2,7 +2,7 @@ import { db } from "@/src/config/firebase";
 import { doc, collection, query, where, limit, getDocs, getDoc } from "firebase/firestore";
 import { NextResponse } from "next/server";
 import { AllMajorsPromise, ErrorPromise, Major} from "@/src/lib/types";
-
+import { capitalizeWords } from "@/src/lib/utils";
 class MajorController {
     private majorRef;
     constructor() {
@@ -36,8 +36,8 @@ class MajorController {
                 const data = doc.data();
                 return {
                     id: doc.id,
-                    majorName: data.majorName,
-                    majorCode: data.majorCode,
+                    majorName: capitalizeWords(data.majorName),
+                    majorCode: data.majorCode.toUpperCase(),
                     courseCount: data.courseCount
                 };
             });

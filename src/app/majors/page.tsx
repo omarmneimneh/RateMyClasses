@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
 import { fetchMajors } from "@/src/lib/api"
 import type { Major } from "@/src/lib/types"
+import { capitalizeWords } from "@/src/lib/utils"
 
 export default function MajorsPage() {
   const [majors, setMajors] = useState<Major[]>([])
@@ -17,7 +18,6 @@ export default function MajorsPage() {
     const loadMajors = async () => {
       try {
         const data = await fetchMajors()
-        console.log(data.majors);
         setMajors(data)
       } catch (error) {
         console.error("Failed to fetch majors:", error)
@@ -27,9 +27,6 @@ export default function MajorsPage() {
     }
     loadMajors()
   }, [])
-  useEffect(() => {
-    console.log(majors);
-  }, [majors]);
   if (loading) {
     return <div>Loading...</div>
   }
@@ -41,7 +38,7 @@ export default function MajorsPage() {
           <span className="font-bold text-xl">RateMyClasses</span>
         </Link>
         <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link href="/page/majors" className="text-sm font-medium hover:underline underline-offset-4">
+          <Link href="/majors" className="text-sm font-medium hover:underline underline-offset-4">
             Majors
           </Link>
           <Link href="/about" className="text-sm font-medium hover:underline underline-offset-4">
@@ -71,16 +68,16 @@ export default function MajorsPage() {
               {majors.map(major => (
                 <Card key={major.id} className="overflow-hidden">
                   <CardHeader className="pb-2">
-                    <CardTitle>{major.majorName}</CardTitle>
+                    <CardTitle>{capitalizeWords(major.majorName)}</CardTitle>
                     <CardDescription>{major.courseCount} courses available</CardDescription>
                   </CardHeader>
                   <CardContent className="pb-2">
                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                      View and rate classes in the {major.majorName} department.
+                      View and rate classes in the {capitalizeWords(major.majorName)} department.
                     </p>
                   </CardContent>
                   <CardFooter>
-                    <Link href={`/pages/majors/${major.majorName}`} className="w-full">
+                    <Link href={`/majors/${major.majorName}`} className="w-full">
                       <Button className="w-full">View Classes</Button>
                     </Link>
                   </CardFooter>

@@ -2,8 +2,8 @@ import { db } from "@/src/config/firebase";
 import { doc, addDoc, collection, query, where, limit, getDocs, getDoc, select } from "firebase/firestore";
 import { Class } from "@/src/lib/types";
 import { NextResponse } from "next/server";
-import { get } from "http";
 
+import { capitalizeWords } from "@/src/lib/utils";
 class ClassController{
     private majorRef;
     private classRef;
@@ -53,16 +53,11 @@ class ClassController{
                 getDocs(codeQuery),
             ]);
             
-            const removeMajorID = (doc) => {
-                const { majorID, ...rest } = doc.data();
-                return { id: doc.id, ...rest };
-            };
-            
-            const res = [
-                ...codeSnapshot.docs.map(removeMajorID),
-                ...nameSnapshot.docs.map(removeMajorID),
-            ];
-                        
+            if (nameSnapshot.empty && codeSnapshot.empty) {
+                return this.returnClassNotFound();
+            }
+            const res = nameSnapshot.empty ? codeSnapshot.docs[0] : nameSnapshot.docs[0];
+            const classData = res.data() as Omit<Class, "id">;
             // gets major info, may use later
             // if (classDoc.majorID) {
             //     const majorRef = classDoc.majorID;
@@ -75,7 +70,8 @@ class ClassController{
 
             return NextResponse.json({
                 classInfo:{
-                    ...res[0]
+                    id: res.id,
+                    ...classData
                 }
             }, { status: 200 });
             
@@ -118,10 +114,7 @@ class ClassController{
                 classSnapShot.docs.map((doc) => ({ 
             
                     id: doc.id,
-                    className: doc.data().className,
-                    classCode: doc.data().classCode,
-                    reviewCount: doc.data().reviewCount,                
-                           
+                    ...doc.data()        
                     })),
             }, { status: 200 });
 

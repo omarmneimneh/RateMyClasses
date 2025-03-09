@@ -10,7 +10,7 @@ export default function Home() {
           <span className="font-bold text-xl">RateMyClasses</span>
         </Link>
         <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link href="/pages/majors" className="text-sm font-medium hover:underline underline-offset-4">
+          <Link href="/majors" className="text-sm font-medium hover:underline underline-offset-4">
             Majors
           </Link>
           <Link href="/about" className="text-sm font-medium hover:underline underline-offset-4">
@@ -34,7 +34,7 @@ export default function Home() {
                 </p>
               </div>
               <div className="space-x-4">
-                <Link href="/pages/majors">
+                <Link href="/majors">
                   <Button className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
                     Browse Majors
                     <MoveRight className="ml-2 h-4 w-4" />

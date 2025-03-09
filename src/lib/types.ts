@@ -9,9 +9,11 @@ export interface Major {
 
 export interface Class {
   id: string
-  majorID: DocumentReference
-  className: string
   classCode: string
+  className: string
+  credits: number
+  description: string
+  majorID: DocumentReference
   majorName: string
   reviewCount: number
 }

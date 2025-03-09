@@ -6,7 +6,7 @@ const cc = new ClassController();
 
 export async function GET(req: NextRequest, {params}: {params:{majorID: string}}){
     
-    const majorID = await decodeURIComponent( params.majorID.toLowerCase());
+    const majorID = decodeURIComponent(await params.majorID.toLowerCase());
     if(!majorID){
         return NextResponse.json({
             "message": "Major name is required",
@@ -25,7 +25,7 @@ export async function GET(req: NextRequest, {params}: {params:{majorID: string}}
         
         const majorInfo = majorSnapShot.majorInfo;
 
-        const classesResponse = await cc.getClassesFromMajor(majorInfo.majorName);
+        const classesResponse = await cc.getClassesFromMajor(majorInfo.majorName.toLowerCase());
         const classSnapShot = await classesResponse.json();
         const classesInfo = classSnapShot.classInfo;
         

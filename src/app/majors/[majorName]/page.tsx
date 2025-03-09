@@ -6,12 +6,14 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Star, StarHalf } from "lucide-react"
-import { fetchMajorDetails, fetchClassDetails} from "@/src/lib/api"
+import { fetchMajorDetails} from "@/src/lib/api"
 import type { Class, Major } from "@/src/lib/types"
+import { capitalizeWords } from "@/src/lib/utils"
+
 
 export default function MajorClassesPage({ params }: { params: { majorName: string } }) {
   const [classes, setClasses] = useState<Class[]>([]);
-  const [major, setMajor] = useState(null);
+  const [major, setMajor] = useState<Major>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
    
@@ -42,7 +44,7 @@ export default function MajorClassesPage({ params }: { params: { majorName: stri
           <span className="font-bold text-xl">RateMyClasses</span>
         </Link>
         <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link href="/pages/majors" className="text-sm font-medium hover:underline underline-offset-4">
+          <Link href="/majors" className="text-sm font-medium hover:underline underline-offset-4">
             Majors
           </Link>
           <Link href="/about" className="text-sm font-medium hover:underline underline-offset-4">
@@ -58,13 +60,13 @@ export default function MajorClassesPage({ params }: { params: { majorName: stri
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-2">
-                <Link href="/pages/majors" className="text-sm text-gray-500 hover:underline">
+                <Link href="/majors" className="text-sm text-gray-500 hover:underline">
                   Majors
                 </Link>
                 <span className="text-sm text-gray-500">/</span>
-                <span className="text-sm font-medium">{major?.majorName || "Loading..."}</span>
+                <span className="text-sm font-medium">{capitalizeWords(major?.majorName) || "Loading..."}</span>
               </div>
-              <h1 className="text-3xl font-bold">{major?.majorName || "Loading..."} Classes</h1>
+              <h1 className="text-3xl font-bold">{capitalizeWords(major?.majorName) || "Loading..."} Classes</h1>
               <p className="text-gray-500 dark:text-gray-400">View and rate classes in this major</p>
             </div>
 
@@ -99,7 +101,7 @@ export default function MajorClassesPage({ params }: { params: { majorName: stri
                       <div className="flex justify-between items-start">
                         <div>
                           <CardTitle>
-                            {classItem.classCode}: {classItem.className}
+                            {classItem.classCode.toUpperCase()}: {capitalizeWords(classItem.className)}
                           </CardTitle>
                         </div>
                         <Badge variant={getDifficultyVariant(classItem.rating || 0)}>
@@ -127,7 +129,7 @@ export default function MajorClassesPage({ params }: { params: { majorName: stri
                       </p>
                     </CardContent>
                     <CardFooter>
-                      <Link href={`/classes/${classItem.id}`} className="w-full">
+                      <Link href={`/classes/${classItem.className}`} className="w-full">
                         <Button className="w-full">View Details</Button>
                       </Link>
                     </CardFooter>

@@ -1,7 +1,7 @@
 import {initializeApp} from 'firebase/app';
 import {getFirestore} from "firebase/firestore";
-import dotnev from "dotenv";
-dotnev.config();
+import { config } from "dotenv";
+config();
 const firebaseConfig = {
     apiKey: process.env.FIREBASE_API_KEY,
     authDomain: process.env.FIREBASE_AUTH_DOMAIN,
@@ -11,6 +11,7 @@ const firebaseConfig = {
     appId: process.env.FIREBASE_APP_ID,
     measurementId: process.env.FIREBASE_MEASUREMENT_ID
 };
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 export {db, app};

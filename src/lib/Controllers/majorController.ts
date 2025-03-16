@@ -41,6 +41,7 @@ class MajorController {
                     courseCount: data.courseCount
                 };
             });
+            console.log(majors);
             return NextResponse.json(majors, { status: 200 });
         } catch (e) {
             const response: ErrorPromise = {

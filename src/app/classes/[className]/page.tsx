@@ -5,7 +5,8 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { fetchClassDetails, createReview, fetchReviews} from "@/src/lib/api"
 import type { Class, Review } from "@/src/lib/types"
-import ClassDetailsLayout from "@/src/app/classes/[className]/components/ClassDetailsLayout"
+import ClassDetailsLayout from "@/src/app/components/Classes/ClassDetailsLayout"
+import {Header} from "@/src/app/components/lib/Layout"
 
 export default function ClassDetailsPage({ params }) {
   const [classDetails, setClassDetails] = useState<Class | null>(null)
@@ -70,22 +71,7 @@ export default function ClassDetailsPage({ params }) {
   if (loading) {
     return (
       <div className="flex flex-col min-h-screen">
-        <header className="px-4 lg:px-6 h-16 flex items-center border-b">
-          <Link href="/" className="flex items-center justify-center">
-            <span className="font-bold text-xl">RateMyClasses</span>
-          </Link>
-          <nav className="ml-auto flex gap-4 sm:gap-6">
-            <Link href="/majors" className="text-sm font-medium hover:underline underline-offset-4">
-              Majors
-            </Link>
-            <Link href="/about" className="text-sm font-medium hover:underline underline-offset-4">
-              About
-            </Link>
-            <Link href="/login" className="text-sm font-medium hover:underline underline-offset-4">
-              Login
-            </Link>
-          </nav>
-        </header>
+        <Header />
         <main className="flex-1 flex justify-center items-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
         </main>
@@ -96,22 +82,7 @@ export default function ClassDetailsPage({ params }) {
   if (error || !classDetails) {
     return (
       <div className="flex flex-col min-h-screen">
-        <header className="px-4 lg:px-6 h-16 flex items-center border-b">
-          <Link href="/" className="flex items-center justify-center">
-            <span className="font-bold text-xl">RateMyClasses</span>
-          </Link>
-          <nav className="ml-auto flex gap-4 sm:gap-6">
-            <Link href="/majors" className="text-sm font-medium hover:underline underline-offset-4">
-              Majors
-            </Link>
-            <Link href="/about" className="text-sm font-medium hover:underline underline-offset-4">
-              About
-            </Link>
-            <Link href="/login" className="text-sm font-medium hover:underline underline-offset-4">
-              Login
-            </Link>
-          </nav>
-        </header>
+        <Header/>
         <main className="flex-1 flex flex-col justify-center items-center">
           <p className="text-red-500">{error || "Class not found"}</p>
           <Button
@@ -119,7 +90,7 @@ export default function ClassDetailsPage({ params }) {
               setLoading(true)
               fetchClassDetails(params.className)
                 .then(setClassDetails)
-                .then(() => fetchReviews(params.className))
+                .then(() => fetchReviews(params.classID))
                 .then(setReviews)
                 .catch((err) => setError(String(err)))
                 .finally(() => setLoading(false))

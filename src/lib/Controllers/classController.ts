@@ -1,5 +1,5 @@
 import { db } from "@/src/config/firebase";
-import { doc, addDoc, collection, query, where, limit, getDocs, getDoc, select } from "firebase/firestore";
+import { doc, addDoc, collection, query, where, limit, getDocs, getDoc, increment } from "firebase/firestore";
 import { Class } from "@/src/lib/types";
 import { NextResponse } from "next/server";
 
@@ -43,11 +43,9 @@ class ClassController{
     // };
     
     async getClass(classInfo: string){
-        try {
-       
+        try {     
             const nameQuery = query(this.classRef, where("className", "==", classInfo), limit(1));
             const codeQuery = query(this.classRef, where("classCode", "==", classInfo), limit(1));
-
             const [nameSnapshot, codeSnapshot] = await Promise.all([
                 getDocs(nameQuery),
                 getDocs(codeQuery),
@@ -75,8 +73,8 @@ class ClassController{
                 }
             }, { status: 200 });
             
-        }catch(error){
-            return this.returnInternalError();
+        }catch(e){
+            return this.returnInternalError(e);
         }
     };
     
@@ -91,7 +89,7 @@ class ClassController{
                 classInfo: { id: classDoc.id, ...rest },
             }, { status: 200 });
         } catch(e){
-            return this.returnInternalError();
+            return this.returnInternalError(e);
         }
     }
 
@@ -99,7 +97,6 @@ class ClassController{
      * returns all classes across majors
     */
     async getClassesFromMajor(majorName: string) {
-        console.log(majorName);
         try {
             const q = query(this.classRef, where("majorName", "==", majorName));
             const classSnapShot = await getDocs(q);
@@ -119,7 +116,7 @@ class ClassController{
             }, { status: 200 });
 
         } catch(e) {
-            return this.returnInternalError();
+            return this.returnInternalError(e);
         }
     }
 
@@ -130,9 +127,9 @@ class ClassController{
         });
     }
 
-    private returnInternalError(){  
+    private returnInternalError(e){  
         return NextResponse.json({
-            classInfo: "Internal server error, please try again later",
+            classInfo: `Internal server error, ${e}`,
             status: 500
         });
     }

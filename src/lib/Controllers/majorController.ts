@@ -45,6 +45,7 @@ class MajorController {
         } catch (e) {
             const response: ErrorPromise = {
                 message: "Internal Error",
+                status: 500
             };
             return NextResponse.json(response, { status: 500 });
         }

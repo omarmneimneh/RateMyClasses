@@ -81,7 +81,7 @@ export default function ClassRatingForm({ classID,className, onSubmitReview, sub
   }
     const generateYearOptions = () => {
       const currentYear = new Date().getFullYear()
-      const startYear = currentYear - 5 // Show 5 years back
+      const startYear = currentYear - 5;
       const years = []
 
       for (let year = currentYear; year >= startYear; year--) {
@@ -156,7 +156,7 @@ export default function ClassRatingForm({ classID,className, onSubmitReview, sub
             </div>
 
             {(localError || submitError) && <div className="text-red-500 text-sm">{localError || submitError}</div>}
-            <Button type="submit" className="w-full" disabled={submitting /*|| !auth.currentUser*/}>
+            <Button type="submit" className="w-full" /*disabled={submitting || !auth.currentUser}*/>
               {submitting ? "Submitting..." : "Submit Review"}
             </Button>
 

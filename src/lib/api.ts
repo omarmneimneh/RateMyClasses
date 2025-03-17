@@ -38,28 +38,26 @@ export const fetchClassDetails = async (className: string)=>{
     return response.json();
 }
 
-/******************** Reviews Portion of API ********************/
 
-export const createReview = async(review: Review): Promise<Review>=>{
-    console.log(`review in createReview: ${JSON.stringify(review)}`)
+/******************** Review Portion of API ********************/
+export const createReview = async (reviewData: Review): Promise<Review> => {
     const response = await fetch(`/api/reviews`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json',
         },
-        body: JSON.stringify(review)
+        body: JSON.stringify(reviewData),
     });
-
-    if(!response.ok){
-        throw new Error(`Error creating review: ${response.statusText}`);
+    if (!response.ok) {
+        throw new Error(`Failed to create review: ${response.statusText}`);
     }
     return response.json();
 }
 
-export const fetchReviews = async(classID: string) : Promise<Review[]>=>{
-    const response = await fetch(`/api/reviews?classID=${encodeURIComponent(classID)}`);
-    if(!response.ok){
-        throw new Error(`Error fetching reviews: ${response.statusText}`)
+export const fetchReviews = async (classID: string): Promise<Review[]> => {
+    const response = await fetch(`/api/reviews?classID=${classID}`);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch reviews: ${response.statusText}`);
     }
-    return response.json()
+    return response.json();
 }

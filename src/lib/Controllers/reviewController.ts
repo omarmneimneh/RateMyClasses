@@ -38,7 +38,6 @@ export default class ReviewController{
 
     async addReview(review: Review){
         try{
-            console.log(`review: ${review}`)
             const classRef = doc(db, "Classes", review.classID)
             const batch = writeBatch(db)
 
@@ -66,7 +65,7 @@ export default class ReviewController{
             }
         } catch(e){
             console.error(e);
-            return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+                return NextResponse.json({ error: "Internal server error" }, { status: 500 });
         }
     }
 }

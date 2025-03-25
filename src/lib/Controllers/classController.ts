@@ -3,7 +3,6 @@ import { doc, addDoc, collection, query, where, limit, getDocs, getDoc, incremen
 import { Class } from "@/src/lib/types";
 import { NextResponse } from "next/server";
 
-import { capitalizeWords } from "@/src/lib/utils";
 class ClassController{
     private majorRef;
     private classRef;

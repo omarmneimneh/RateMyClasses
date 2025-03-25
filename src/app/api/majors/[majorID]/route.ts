@@ -5,8 +5,8 @@ const mc = new MajorController();
 const cc = new ClassController();
 
 export async function GET(req: NextRequest, {params}: {params:{majorID: string}}){
-    
-    const majorID = decodeURIComponent(await params.majorID.toLowerCase());
+    await params;
+    const majorID = decodeURIComponent(params.majorID.toLowerCase());
     if(!majorID){
         return NextResponse.json({
             "message": "Major name is required",

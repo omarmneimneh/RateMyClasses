@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Class, Review } from "@/src/lib/types"
 import ClassHeader from "@/src/app/components/Classes/ClassHeader"
@@ -13,7 +13,7 @@ import {Header, Footer} from "@/src/app/components/lib/Layout"
 interface ClassDetailsLayoutProps {
   classDetails: Class
   reviews: Review[]
-  //onLikeReview: (reviewId: string) => Promise<void>
+  onLikeReview: (reviewId: string) => Promise<void>
   onSubmitReview: (reviewData: Review) => Promise<Review>
   submitting: boolean
   submitError: string | null
@@ -22,7 +22,7 @@ interface ClassDetailsLayoutProps {
 export default function ClassDetailsLayout({
   classDetails,
   reviews,
-  // onLikeReview,
+  onLikeReview,
   onSubmitReview,
   submitting,
   submitError,
@@ -51,7 +51,7 @@ export default function ClassDetailsLayout({
               <TabsContent value="reviews" className="mt-4 space-y-4">
                 <ClassReviews
                   reviews={reviews}
-                  // onLikeReview={onLikeReview}
+                  onLikeReview={onLikeReview}
                   onWriteReview={() => setActiveTab("rate")}
                 />
               </TabsContent>

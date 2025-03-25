@@ -29,7 +29,6 @@ export const fetchMajorDetails = async (majorName: string)=>{
 
 /******************** Classes Portion of API ********************/
 export const fetchClassDetails = async (className: string)=>{
-    console.log(`#### fetch details: ${className}`)
     const response = await fetch(`/api/classes/${encodeURIComponent(className)}`);
     if(!response.ok){
         throw new Error();
@@ -61,3 +60,18 @@ export const fetchReviews = async (classID: string): Promise<Review[]> => {
     }
     return response.json();
 }
+
+export const likeReview = async (reviewID: string) => {
+    const response = await fetch(`/api/reviews?reviewID=${reviewID}`, {
+        method: "PATCH",
+        headers: {
+        "Content-Type": "application/json",
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error(`Failed to add like: ${response.statusText}`);
+    }
+
+    return response.json();
+};

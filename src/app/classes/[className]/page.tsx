@@ -3,13 +3,13 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { fetchClassDetails, createReview, fetchReviews} from "@/src/lib/api"
+import { fetchClassDetails, createReview, fetchReviews, likeReview} from "@/src/lib/api"
 import type { Class, Review } from "@/src/lib/types"
 import ClassDetailsLayout from "@/src/app/components/Classes/ClassDetailsLayout"
 import {Header} from "@/src/app/components/lib/Layout"
 
-export default function ClassDetailsPage({ params }) {
-  const [classDetails, setClassDetails] = useState<Class | null>(null)
+export default function ClassDetailsPage({ params }: {params:{className: string}}) {
+  const [classDetails, setClassDetails] = useState<Class|null>(null)
   const [reviews, setReviews] = useState<Review[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -23,7 +23,7 @@ export default function ClassDetailsPage({ params }) {
         const {className} = await params
         const classData = await fetchClassDetails(className)
         setClassDetails(classData.classInfo)
-        const reviewsData = await fetchReviews(className)
+        const reviewsData = await fetchReviews(classData.classInfo.id)
         setReviews(reviewsData)
         setError(null)
       } catch (err) {
@@ -40,10 +40,16 @@ export default function ClassDetailsPage({ params }) {
     try {
       setSubmitting(true)
       setSubmitError(null)
-      console.log(`reviewData: ${JSON.stringify(reviewData)}`)
-      const newReview = await createReview(reviewData)
-      setReviews(reviews.length > 0 ? (prevReviews) => [newReview, ...prevReviews] : [newReview]);
-      return newReview
+      await createReview(reviewData);
+      setReviews(reviews.length > 0 ? (prevReviews) => [reviewData, ...prevReviews] : [reviewData]);
+      setClassDetails((prevDetails) =>
+        prevDetails
+        ? {
+          ...prevDetails,
+          reviewCount: (prevDetails.reviewCount || 0) + 1,
+          rating: (prevDetails.rating || 0) + (reviewData.rating || 0) / ((prevDetails.reviewCount || 0) + 1),
+        }: null
+      )
     } catch (err) {
       console.error("Failed to submit review:", err)
       setSubmitError("Failed to submit review. Please try again later.")
@@ -53,16 +59,16 @@ export default function ClassDetailsPage({ params }) {
     }
   }
 
-  // const handleLikeReview = async (reviewId: string) => {
-  //   try {
-  //     await likeReview(reviewId)
-  //     setReviews((prevReviews) =>
-  //       prevReviews.map((review) => (review.id === reviewId ? { ...review, likes: (review.likes || 0) + 1 } : review)),
-  //     )
-  //   } catch (err) {
-  //     console.error("Failed to like review:", err)
-  //   }
-  // }
+  const handleLikeReview = async (reviewId: string) => {
+    try {
+      await likeReview(reviewId)
+      setReviews((prevReviews) =>
+        prevReviews.map((review) => (review.id === reviewId ? { ...review, likes: (review.likes || 0) + 1 } : review)),
+      )
+    } catch (err) {
+      console.error("Failed to like review:", err)
+    }
+  }
 
   if (loading) {
     return (
@@ -86,7 +92,7 @@ export default function ClassDetailsPage({ params }) {
               setLoading(true)
               fetchClassDetails(params.className)
                 .then(setClassDetails)
-                .then(() => fetchReviews(params.classID))
+                .then(() => fetchReviews(params.className))
                 .then(setReviews)
                 .catch((err) => setError(String(err)))
                 .finally(() => setLoading(false))
@@ -109,7 +115,7 @@ export default function ClassDetailsPage({ params }) {
     <ClassDetailsLayout
       classDetails={classDetails}
       reviews={reviews}
-      // onLikeReview={handleLikeReview}
+      onLikeReview={handleLikeReview}
       onSubmitReview={handleSubmitReview}
       submitting={submitting}
       submitError={submitError}

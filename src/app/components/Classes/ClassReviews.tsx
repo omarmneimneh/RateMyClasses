@@ -2,17 +2,17 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+//import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Star, ThumbsUp, MessageSquare } from "lucide-react"
 import type { Review } from "@/src/lib/types"
 
 interface ClassReviewsProps {
   reviews: Review[]
-  //onLikeReview: (reviewId: string) => Promise<void>
+  onLikeReview: (reviewId: string) => Promise<void>
   onWriteReview: () => void
 }
 
-export default function ClassReviews({ reviews, /*onLikeReview,*/ onWriteReview }: ClassReviewsProps) {
+export default function ClassReviews({ reviews, onLikeReview, onWriteReview }: ClassReviewsProps) {
   return (
     <Card>
       <CardHeader>

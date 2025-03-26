@@ -1,12 +1,12 @@
-# Guide to Running Project 
+## Guide to Running Project 
 
 1. Install necessary packages
     - `npm install`
+
 2. Running
     - To run dev server:
         - `npm run dev`
         - This will give you a url that should look like `http://localhost:<###>`
-
     - To run prod server:
         - `npm run build ; npm run start`
         - This will give you a url that should look like `http://localhost:<###>`

@@ -1,16 +1,15 @@
-<details>
-<summary># Guide to Running</summary>
-1) Install necessary packages
-    `npm install`
-2) Running
-- To run dev server:
-    - `npm run dev`
-    - This will give you a url that should look like `http://localhost:<###>`
+# Guide to Running Project 
 
-- To run prod server:
-    - `npm run build ; npm run start`
-    - This will give you a url that should look like `http://localhost:<###>`
-</details> 
+1. Install necessary packages
+    - `npm install`
+2. Running
+    - To run dev server:
+        - `npm run dev`
+        - This will give you a url that should look like `http://localhost:<###>`
+
+    - To run prod server:
+        - `npm run build ; npm run start`
+        - This will give you a url that should look like `http://localhost:<###>`
 
 ## API Info
 

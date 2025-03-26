@@ -27,27 +27,22 @@ export default function ClassRatingForm({ classID,className, onSubmitReview, sub
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
     if (!userRating) {
         setLocalError("Please select a rating")
         return
     }
-
     if (!userComment.trim()) {
         setLocalError("Please enter a comment")
         return
     }
-
     if (!semester) {
         setLocalError("Please select a semester")
         return
     }
-
     if (!year) {
         setLocalError("Please select a year")
         return
     }
-
     setLocalError(null)
 
     //const currentUser = auth.currentUser
@@ -123,8 +118,12 @@ export default function ClassRatingForm({ classID,className, onSubmitReview, sub
                 placeholder="Share your experience with this class..."
                 className="min-h-[120px]"
                 value={userComment}
+                maxLength={300}
                 onChange={(e) => setUserComment(e.target.value)}
               />
+              <p className="text-sm text-gray-500 mt-1">
+                {userComment.length}/300 characters
+              </p>
             </div>
 
             <div>

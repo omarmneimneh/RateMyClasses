@@ -1,5 +1,3 @@
-import type { DocumentReference } from "firebase/firestore";
-
 export interface Major {
   id?: string
   majorName: string
@@ -13,7 +11,6 @@ export interface Class {
   className: string
   credits: number
   description: string
-  majorID: DocumentReference
   majorName: string
   reviewCount: number
   rating: number

@@ -2,12 +2,11 @@ import {Class, Review} from "@/src/lib/types";
 
 
 /******************** Majors Portion of API ********************/
-export const fetchClasses = async (majorName:string): Promise<Class[]> => {
-    const response = await fetch(`/api/majors/${encodeURIComponent(majorName)}`);
+export const fetchClasses = async (majorName:string)=> {
+    const response = await fetch(`/api/majors/${decodeURIComponent(majorName)}/classes`);
     if(!response.ok){
         throw new Error(`Error fetching major: ${response.statusText}`)
     }
-
     return response.json();
 }
 
@@ -29,7 +28,7 @@ export const fetchMajorDetails = async (majorName: string)=>{
 
 /******************** Classes Portion of API ********************/
 export const fetchClassDetails = async (className: string)=>{
-    const response = await fetch(`/api/classes/${encodeURIComponent(className)}`);
+    const response = await fetch(`/api/classes/${decodeURIComponent(className)}`);
     if(!response.ok){
         throw new Error();
     }
@@ -37,6 +36,19 @@ export const fetchClassDetails = async (className: string)=>{
     return response.json();
 }
 
+export const addClass = async (classData: Class): Promise<Class> => {
+    const response = await fetch(`/api/classes`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(classData),
+    });
+    if(response.ok){
+        return response.json();
+    }
+    throw new Error("Couldn\'t add class");
+}
 
 /******************** Review Portion of API ********************/
 export const createReview = async (reviewData: Review): Promise<Review> => {
@@ -62,7 +74,7 @@ export const fetchReviews = async (classID: string): Promise<Review[]> => {
 }
 
 export const likeReview = async (reviewID: string) => {
-    const response = await fetch(`/api/reviews/likes?reviewID=${reviewID}`, {
+    const response = await fetch(`/api/reviews/${reviewID}/like`, {
         method: "PATCH",
         headers: {
         "Content-Type": "application/json",

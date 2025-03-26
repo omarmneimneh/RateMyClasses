@@ -67,7 +67,11 @@ export default function MajorsPage() {
                         </p>
                       </CardContent>
                       <CardFooter>
-                        <Link href={`/majors/${major.majorName}`} className="w-full">
+                        <Link 
+                          href={`/majors/${major.majorName}`} 
+                          className="w-full"
+                          onClick={() => localStorage.setItem("selectedMajor", JSON.stringify(major))}
+                        >
                           <Button className="w-full">View Classes</Button>
                         </Link>
                       </CardFooter>

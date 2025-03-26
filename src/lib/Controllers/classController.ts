@@ -103,15 +103,14 @@ class ClassController{
             if (classSnapShot.empty) {
                 return this.returnClassNotFound();
             }
+            const classInfo=classSnapShot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data()        
+                }))
             
             
             return NextResponse.json({
-                classInfo: 
-                classSnapShot.docs.map((doc) => ({ 
-            
-                    id: doc.id,
-                    ...doc.data()        
-                    })),
+                classInfo
             }, { status: 200 });
 
         } catch(e: unknown) {

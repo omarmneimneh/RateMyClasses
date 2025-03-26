@@ -22,9 +22,10 @@ export default function ClassDetailsPage( {params} : {params:Params}) {
       try {
         setLoading(true)
         const {className} = await params
-        const classData = await fetchClassDetails(className)
-        setClassDetails(classData.classInfo)
-        const reviewsData = await fetchReviews(classData.classInfo.id)
+        const classData = localStorage.getItem("selectedClass") ? JSON.parse(localStorage.getItem("selectedClass") as string) : (await fetchClassDetails(className)).classInfo;
+        setClassDetails(classData)
+        const reviewsData = await fetchReviews(classData.id)
+        
         setReviews(reviewsData)
         setError(null)
       } catch (err) {
@@ -65,10 +66,11 @@ export default function ClassDetailsPage( {params} : {params:Params}) {
 
   const handleLikeReview = async (reviewId: string) => {
     try {
-      await likeReview(reviewId)
       setReviews((prevReviews) =>
-        prevReviews.map((review) => (review.id === reviewId ? { ...review, likes: (review.likes || 0) + 1 } : review)),
+        prevReviews.map((review) => (review.id === reviewId ? { ...review, likes: review.likes + 1 } : review)),
       )
+      await likeReview(reviewId)
+      
     } catch (err) {
       console.error("Failed to like review:", err)
     }

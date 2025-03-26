@@ -3,10 +3,10 @@ import MajorController  from "@/src/lib/Controllers/majorController"
 import { NextRequest, NextResponse } from "next/server"
 const mc = new MajorController();
 const cc = new ClassController();
-
-export async function GET(req: NextRequest, {params}: {params:{majorID: string}}){
-    await params;
-    const majorID = decodeURIComponent(params.majorID.toLowerCase());
+type Params = Promise<{majorID:string}>
+export async function GET(req: NextRequest, {params}: {params:Params}){
+    
+    const {majorID} = await params;
     if(!majorID){
         return NextResponse.json({
             "message": "Major name is required",
@@ -14,7 +14,7 @@ export async function GET(req: NextRequest, {params}: {params:{majorID: string}}
         });
     }
     try{
-        const response = await mc.getMajor(majorID);
+        const response = await mc.getMajor(decodeURIComponent(majorID.toLowerCase()));
         const majorSnapShot = await response.json();
         if(majorSnapShot.status!== 200){
             return NextResponse.json({

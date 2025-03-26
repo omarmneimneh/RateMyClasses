@@ -14,7 +14,7 @@ interface ClassDetailsLayoutProps {
   classDetails: Class
   reviews: Review[]
   onLikeReview: (reviewId: string) => Promise<void>
-  onSubmitReview: (reviewData: Review) => Promise<Review>
+  onSubmitReview: (reviewData: Review) => Promise<void>
   submitting: boolean
   submitError: string | null
 }

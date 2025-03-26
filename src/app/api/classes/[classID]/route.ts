@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import ClassController  from "@/src/lib/Controllers/classController";
 const cc = new ClassController();
-
-export async function GET(req: NextRequest, {params}: {params:{classID: string}}){
+type Params =   Promise<{classID:string}>
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Params }
+){
     const {classID} = await params
     if (!classID) {
         console.error("Class name required for classes/[className]");

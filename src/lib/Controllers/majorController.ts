@@ -1,7 +1,7 @@
 import { db } from "@/src/config/firebase";
 import { doc, collection, query, where, limit, getDocs, getDoc } from "firebase/firestore";
 import { NextResponse } from "next/server";
-import { AllMajorsPromise, ErrorPromise, Major} from "@/src/lib/types";
+import { ErrorPromise, Major} from "@/src/lib/types";
 import { capitalizeWords } from "@/src/lib/utils";
 class MajorController {
     private majorRef;
@@ -25,7 +25,7 @@ class MajorController {
             }
             return NextResponse.json({majorInfo: response, status: 200} );
         } catch (e) {
-            return NextResponse.json({ majorInfo: "Internal server error, please try again later" }, { status: 500 });
+            return NextResponse.json({ majorInfo: "Internal server error, please try again later",e }, { status: 500 });
         }
     }
     async getAllMajors()/*: Promise<NextResponse<AllMajorsPromise | ErrorPromise>>*/ {
@@ -44,7 +44,7 @@ class MajorController {
             return NextResponse.json(majors, { status: 200 });
         } catch (e) {
             const response: ErrorPromise = {
-                message: "Internal Error",
+                message: `Internal Error ${e}`,
                 status: 500
             };
             return NextResponse.json(response, { status: 500 });
@@ -66,7 +66,8 @@ class MajorController {
                 status: 200 
             });
         } catch (e) {
-            return NextResponse.json({ message: "Internal server error, please try again later" }, { status: 500 });
+
+            return NextResponse.json({ message: `Internal server error, please try again later: ${e}` }, { status: 500 });
         }
     }
 };

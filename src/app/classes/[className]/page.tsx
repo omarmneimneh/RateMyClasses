@@ -7,8 +7,9 @@ import { fetchClassDetails, createReview, fetchReviews, likeReview} from "@/src/
 import type { Class, Review } from "@/src/lib/types"
 import ClassDetailsLayout from "@/src/app/components/Classes/ClassDetailsLayout"
 import {Header} from "@/src/app/components/lib/Layout"
+type Params = Promise<{className: string}>
 
-export default function ClassDetailsPage({ params }: {params:{className: string}}) {
+export default function ClassDetailsPage( {params} : {params:Params}) {
   const [classDetails, setClassDetails] = useState<Class|null>(null)
   const [reviews, setReviews] = useState<Review[]>([])
   const [loading, setLoading] = useState(true)
@@ -40,14 +41,17 @@ export default function ClassDetailsPage({ params }: {params:{className: string}
     try {
       setSubmitting(true)
       setSubmitError(null)
-      await createReview(reviewData);
+      const id = (await createReview(reviewData)).id;
+      reviewData.id = id;
       setReviews(reviews.length > 0 ? (prevReviews) => [reviewData, ...prevReviews] : [reviewData]);
       setClassDetails((prevDetails) =>
         prevDetails
         ? {
           ...prevDetails,
-          reviewCount: (prevDetails.reviewCount || 0) + 1,
-          rating: (prevDetails.rating || 0) + (reviewData.rating || 0) / ((prevDetails.reviewCount || 0) + 1),
+          reviewCount: prevDetails ? prevDetails.reviewCount+1:0,
+          rating: (prevDetails.rating
+            ? (prevDetails.rating * prevDetails.reviewCount + reviewData.rating) / (prevDetails.reviewCount + 1)
+            : reviewData.rating)
         }: null
       )
     } catch (err) {
@@ -88,14 +92,17 @@ export default function ClassDetailsPage({ params }: {params:{className: string}
         <main className="flex-1 flex flex-col justify-center items-center">
           <p className="text-red-500">{error || "Class not found"}</p>
           <Button
-            onClick={() => {
+            onClick={async () => {
               setLoading(true)
-              fetchClassDetails(params.className)
-                .then(setClassDetails)
-                .then(() => fetchReviews(params.className))
-                .then(setReviews)
-                .catch((err) => setError(String(err)))
-                .finally(() => setLoading(false))
+              try{
+                const {className} = await params;
+                setClassDetails(await fetchClassDetails(className));
+                setReviews(await fetchReviews(className))
+              }catch(e){
+                setError(String(e))
+              } finally{
+                setLoading(false)
+              }
             }}
             className="mt-4"
           >

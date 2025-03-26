@@ -1,6 +1,6 @@
 import { Review, ErrorPromise } from "@/src/lib/types";
 import {db} from "@/src/config/firebase";
-import {collection, query, where, updateDoc, getDocs, addDoc, doc, increment, getDoc, runTransaction} from "firebase/firestore";
+import {collection, query, where, updateDoc, getDocs, addDoc, doc, increment, runTransaction} from "firebase/firestore";
 import { NextResponse } from "next/server";
 import ClassController from "@/src/lib/Controllers/classController";
 
@@ -43,16 +43,15 @@ export default class ReviewController{
                 const rating = classDoc.data().rating
                 const newRating = (review.rating + (rating * reviewCount)) / (reviewCount + 1);
                 transaction.update(classRef, {
-                    rating: newRating,
+                    rating: rating == 0 ? review.rating : newRating,
                     reviewCount: increment(1)
                 })
             })
 
             const postedReview = await addDoc(this.reviewRef, review);
-        
             
             return NextResponse.json({
-                id: postedReview.id,
+                id: postedReview.id
             }, { status: 201
             })
             

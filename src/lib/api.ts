@@ -1,4 +1,4 @@
-import {Class, ErrorPromise, Major, Review} from "@/src/lib/types";
+import {Class, Review} from "@/src/lib/types";
 
 
 /******************** Majors Portion of API ********************/
@@ -62,7 +62,7 @@ export const fetchReviews = async (classID: string): Promise<Review[]> => {
 }
 
 export const likeReview = async (reviewID: string) => {
-    const response = await fetch(`/api/reviews?reviewID=${reviewID}`, {
+    const response = await fetch(`/api/reviews/likes?reviewID=${reviewID}`, {
         method: "PATCH",
         headers: {
         "Content-Type": "application/json",

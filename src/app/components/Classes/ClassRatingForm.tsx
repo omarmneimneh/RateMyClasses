@@ -156,7 +156,7 @@ export default function ClassRatingForm({ classID,className, onSubmitReview, sub
             </div>
 
             {(localError || submitError) && <div className="text-red-500 text-sm">{localError || submitError}</div>}
-            <Button type="submit" className="w-full" /*disabled={submitting || !auth.currentUser}*/>
+            <Button type="submit" className="w-full" disabled={submitting /*|| !auth.currentUser*/}>
               {submitting ? "Submitting..." : "Submit Review"}
             </Button>
 

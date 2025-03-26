@@ -1,5 +1,5 @@
 import { db } from "@/src/config/firebase";
-import { doc, addDoc, collection, query, where, limit, getDocs, getDoc, increment } from "firebase/firestore";
+import { doc, collection, query, where, limit, getDocs, getDoc } from "firebase/firestore";
 import { Class } from "@/src/lib/types";
 import { NextResponse } from "next/server";
 
@@ -83,9 +83,9 @@ class ClassController{
             if (!classDoc.exists()) {
                 return this.returnClassNotFound();
             }
-            const { majorID, ...rest } = classDoc.data();
+            
             return NextResponse.json({
-                classInfo: { id: classDoc.id, ...rest },
+                classInfo: { id: classDoc.id, ...classDoc.data() },
             }, { status: 200 });
         } catch(e){
             return this.returnInternalError(e);
@@ -114,7 +114,7 @@ class ClassController{
                     })),
             }, { status: 200 });
 
-        } catch(e) {
+        } catch(e: unknown) {
             return this.returnInternalError(e);
         }
     }
@@ -126,7 +126,7 @@ class ClassController{
         });
     }
 
-    private returnInternalError(e){  
+    private returnInternalError(e: unknown){  
         return NextResponse.json({
             classInfo: `Internal server error, ${e}`,
             status: 500

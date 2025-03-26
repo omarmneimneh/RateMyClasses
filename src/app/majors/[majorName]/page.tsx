@@ -3,21 +3,21 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, /*CardDescription,*/ CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Star, StarHalf } from "lucide-react"
 import { fetchMajorDetails} from "@/src/lib/api"
 import type { Class, Major } from "@/src/lib/types"
 import { capitalizeWords } from "@/src/lib/utils"
 import {Footer, Header} from "@/src/app/components/lib/Layout"
+type Params = Promise<{majorName:string}>
 
-
-export default function MajorClassesPage({ params }: { params: { majorName: string } }) {
+export default function MajorClassesPage({ params }: { params: Params }) {
   const [classes, setClasses] = useState<Class[]>([]);
   const [major, setMajor] = useState<Major>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-   
+  
   //makes sure parameter promises are fulfilled before fetching data and moving on
   useEffect(() => {
     const loadData = async () => {
@@ -50,9 +50,9 @@ export default function MajorClassesPage({ params }: { params: { majorName: stri
                   Majors
                 </Link>
                 <span className="text-sm text-gray-500">/</span>
-                <span className="text-sm font-medium">{capitalizeWords(major?.majorName) || "Loading..."}</span>
+                <span className="text-sm font-medium">{major ? capitalizeWords(major.majorName): "Loading..."}</span>
               </div>
-              <h1 className="text-3xl font-bold">{capitalizeWords(major?.majorName) || "Loading..."} Classes</h1>
+              <h1 className="text-3xl font-bold">{major ? capitalizeWords(major.majorName) : "Loading..."} Classes</h1>
               <p className="text-gray-500 dark:text-gray-400">View and rate classes in this major</p>
             </div>
 
@@ -66,13 +66,14 @@ export default function MajorClassesPage({ params }: { params: { majorName: stri
                 <Button
                   onClick={() => {
                     setLoading(true)
-                    fetchMajorDetails(params.majorName)
+                    params
+                      .then((resolvedParams) => fetchMajorDetails(resolvedParams.majorName))
                       .then((majorData) => {
-                        setMajor(majorData)
-                        setClasses(majorData.classes)
+                        setMajor(majorData.majorInfo);
+                        setClasses(majorData.classes);
                       })
                       .catch((err) => setError(String(err)))
-                      .finally(() => setLoading(false))
+                      .finally(() => setLoading(false));
                   }}
                   className="mt-4"
                 >

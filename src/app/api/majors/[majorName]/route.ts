@@ -1,4 +1,3 @@
-import ClassController from "@/src/lib/Controllers/classController";
 import MajorController  from "@/src/lib/Controllers/majorController"
 import { NextRequest, NextResponse } from "next/server"
 const mc = new MajorController();
@@ -10,8 +9,8 @@ export async function GET(req: NextRequest, {params}: {params:Params}){
     
     if(!majorName){
         return NextResponse.json({
-            "message": "Major name is required",
-            "status": 400
+            message: "Major name is required",
+            status: 400
         });
     }
     try{

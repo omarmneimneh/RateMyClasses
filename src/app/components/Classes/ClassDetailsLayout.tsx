@@ -36,7 +36,7 @@ export default function ClassDetailsLayout({
         <div className="container mx-auto max-w-4xl">
           <div className="flex flex-col gap-6">
             <ClassHeader classDetails={classDetails} />
-
+            
             <Tabs defaultValue="overview" className="w-full" onValueChange={setActiveTab} value={activeTab}>
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="overview">Overview</TabsTrigger>

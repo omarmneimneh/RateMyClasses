@@ -1,5 +1,5 @@
 import { db } from "@/src/config/firebase";
-import { doc, collection, query, where, limit, getDocs, getDoc } from "firebase/firestore";
+import { doc, collection, query, where, limit, getDocs, getDoc, updateDoc, increment} from "firebase/firestore";
 import { NextResponse } from "next/server";
 import { ErrorPromise, Major} from "@/src/lib/types";
 import { capitalizeWords } from "@/src/lib/utils";
@@ -68,6 +68,18 @@ class MajorController {
         } catch (e) {
 
             return NextResponse.json({ message: `Internal server error, please try again later: ${e}` }, { status: 500 });
+        }
+    }
+
+    async incrementCourseCount(majorName: string){
+        try {
+            const major = await this.getMajor(majorName.toLowerCase());
+            const majorID = (await major.json()).majorInfo.id;
+            await updateDoc(doc(this.majorRef, majorID), {
+                courseCount: increment(1)
+            });
+        } catch(e) {
+            return NextResponse.json({ message: `Internal server error, please try again later.` }, { status: 500 });
         }
     }
 };

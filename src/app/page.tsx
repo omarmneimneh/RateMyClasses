@@ -1,11 +1,18 @@
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { MoveRight } from "lucide-react"
-import {Footer, Header} from "@/src/app/components/lib/Layout"
-
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { MoveRight } from "lucide-react";
+import {Footer, Header} from "@/src/app/components/lib/Layout";
+import Head from "next/head";
 export default function Home() {
+
   return (
+    
     <div className="flex flex-col min-h-screen">
+      <Head>
+        <link
+          rel="icon"
+        />
+      </Head>
       <Header/>
       <div className="w-full">
         <main className="flex-1">

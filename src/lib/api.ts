@@ -1,4 +1,5 @@
 import {Class, Review} from "@/src/lib/types";
+import { NextResponse } from "next/server";
 
 
 /******************** Majors Portion of API ********************/
@@ -36,18 +37,15 @@ export const fetchClassDetails = async (className: string)=>{
     return response.json();
 }
 
-export const addClass = async (classData: Class): Promise<Class> => {
-    const response = await fetch(`/api/classes`, {
+export const addClass = async (classData: Class)=> {
+    const response = await fetch(`/api/majors/${encodeURIComponent(classData.majorName.toLowerCase())}/classes`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(classData),
     });
-    if(response.ok){
-        return response.json();
-    }
-    throw new Error("Couldn\'t add class");
+    return response.json();
 }
 
 /******************** Review Portion of API ********************/

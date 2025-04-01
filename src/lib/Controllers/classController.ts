@@ -1,13 +1,14 @@
 import { db } from "@/src/config/firebase";
-import { doc, collection, query, where, limit, getDocs, getDoc } from "firebase/firestore";
+import { doc, collection, query, where, limit, getDocs, getDoc, addDoc} from "firebase/firestore";
 import { Class } from "@/src/lib/types";
 import { NextResponse } from "next/server";
+import MajorController from "./majorController";
 
 class ClassController{
-    private majorRef;
+    private mc;
     private classRef;
     constructor(){
-        this.majorRef = collection(db, "Majors");
+        this.mc = new MajorController();
         this.classRef = collection(db, "Classes");
     };
 
@@ -18,28 +19,6 @@ class ClassController{
      * majorID is retrieved by querying Majors document
      */
 
-    // async createClass(req: Request){ 
-    //     console.log(req.body);
-    //     const {majorName, className, classCode} = req.body
-    //     try{
-    //         const queryForMajor = query(this.majorRef, where("majorName", "==", majorName));
-    //         const majorID = (await getDocs(queryForMajor)).docs[0].id;
-            
-    //         const newClass : Class = {
-    //             majorID: doc(db, "Majors", majorID), 
-    //             className: className, 
-    //             classCode: classCode
-    //         };
-    //         const addingSnapShot = await addDoc(this.classRef, newClass);
-    //         if(addingSnapShot.id.length == 0){
-    //             return 404;
-    //         }
-    //         return 200;
-            
-    //     }catch(e){
-    //         console.log(e);
-    //     }
-    // };
     
     async getClass(classInfo: string){
         try {     
@@ -55,22 +34,16 @@ class ClassController{
             }
             const res = nameSnapshot.empty ? codeSnapshot.docs[0] : nameSnapshot.docs[0];
             const classData = res.data() as Omit<Class, "id">;
-            // gets major info, may use later
-            // if (classDoc.majorID) {
-            //     const majorRef = classDoc.majorID;
-            //     const majorSnap = await getDoc(majorRef);
-                
-            //     if (majorSnap.exists()) {
-            //         majorData = { id: majorSnap.id, ...majorSnap.data() };
-            //     }
-            // }
-
+            if (!classData) {
+                return this.returnClassNotFound();
+            }
             return NextResponse.json({
                 classInfo:{
                     id: res.id,
                     ...classData
-                }
-            }, { status: 200 });
+                },
+                status:200
+            },);
             
         }catch(e){
             return this.returnInternalError(e);
@@ -119,10 +92,10 @@ class ClassController{
     }
 
     private returnClassNotFound(){
-        return NextResponse.json({
+        return{
             classInfo: "Class not found",
             status: 404
-        });
+        };
     }
 
     private returnInternalError(e: unknown){  
@@ -131,5 +104,34 @@ class ClassController{
             status: 500
         });
     }
+
+    async addClass(classDetails: Class){ 
+        try{
+            const getByName = await this.getClass(classDetails.className.toLowerCase());
+            const getByClassCode = await this.getClass(classDetails.classCode.toLowerCase());
+            
+            if (getByName.status === 200 || getByClassCode.status === 200) {
+                return {
+                    success: false,
+                    message: "Class already exists",
+                    status: 404
+                };
+            }
+
+            // If the class does not exist, proceed to add it
+            await this.mc.incrementCourseCount(classDetails.majorName);            
+            const addingSnapShot = await addDoc(this.classRef, {
+                ...classDetails});
+            if(addingSnapShot.id){
+                return {
+                    success: true,
+                    id: addingSnapShot.id,
+                    ...classDetails
+                }
+            }   
+        }catch(e){
+            return this.returnInternalError(e);
+        }
+    };
 };
 export default ClassController;

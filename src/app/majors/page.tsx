@@ -13,6 +13,8 @@ import {Footer, Header} from "@/src/app/components/lib/Layout"
 
 export default function MajorsPage() {
   const [majors, setMajors] = useState<Major[]>([])
+  const [filteredMajors, setFilteredMajors] = useState<Major[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -20,6 +22,7 @@ export default function MajorsPage() {
       try {
         const data = await fetchMajors()
         setMajors(data)
+        setFilteredMajors(data);
       } catch (error) {
         console.error("Failed to fetch majors:", error)
       } finally {
@@ -27,7 +30,21 @@ export default function MajorsPage() {
       }
     }
     loadMajors()
-  }, [])
+  }, []);
+
+  useEffect(()=>{
+    if (!searchTerm.trim()) {
+      setFilteredMajors(majors) // Reset to original list when search is empty
+    } else {
+      const lowerCasedSearch = searchTerm.toLowerCase()
+      setFilteredMajors(
+        majors.filter(major =>
+          major.majorName.toLowerCase().includes(lowerCasedSearch)
+        ))
+    }
+  }, [searchTerm, majors])
+
+  
   if (loading) {
     return <div>Loading...</div>
   }
@@ -49,13 +66,16 @@ export default function MajorsPage() {
                     type="search"
                     placeholder="Search majors..."
                     className="w-full bg-background pl-8 rounded-md border border-input"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    autoComplete="off"
                   />
                 </div>
               </div>
 
               <div className="w-full flex justify-center">
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  {majors.map(major => (
+                  {filteredMajors.map(major => (
                     <Card key={major.id} className="overflow-hidden">
                       <CardHeader className="pb-2">
                         <CardTitle>{capitalizeWords(major.majorName)}</CardTitle>

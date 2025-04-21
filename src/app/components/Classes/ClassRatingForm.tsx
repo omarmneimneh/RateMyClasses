@@ -155,9 +155,12 @@ export default function ClassRatingForm({ classID,className, onSubmitReview, sub
             </div>
 
             {(localError || submitError) && <div className="text-red-500 text-sm">{localError || submitError}</div>}
-            <Button type="submit" className="w-full" disabled={submitting /*|| !auth.currentUser*/}>
-              {submitting ? "Submitting..." : "Submit Review"}
-            </Button>
+            <div className="flex justify-center mt-4 w-full">
+              <Button type="submit" className="w-1/3" disabled={submitting /*|| !auth.currentUser*/}>
+                {submitting ? "Submitting..." : "Submit Review"}
+              </Button>
+            </div>
+            
 
             {/* {!auth.currentUser && (
               <div className="text-center mt-2">

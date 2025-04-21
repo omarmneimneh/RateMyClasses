@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { SignInModal } from "@/src/app/components/auth/SignInModal";
+import { auth } from "@/src/config/firebase";
 export function Footer() {
     return(
         <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t mt-auto">
@@ -17,6 +19,8 @@ export function Footer() {
 }
 
 export function Header() {
+    const signedIn = auth.currentUser !== null;
+    console.log(signedIn);
     return (
         <header className="px-4 lg:px-6 h-16 flex items-center border-b">
             <Link href="/" className="flex items-center justify-center">
@@ -29,9 +33,7 @@ export function Header() {
             <Link href="/about" className="text-sm font-medium hover:underline underline-offset-4">
                 About
             </Link>
-            <Link href="/login" className="text-sm font-medium hover:underline underline-offset-4">
-                Login
-            </Link>
+            {!signedIn && <SignInModal />}
             </nav>
         </header>
     )

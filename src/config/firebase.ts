@@ -1,7 +1,6 @@
 import {initializeApp} from 'firebase/app';
 import {getFirestore} from "firebase/firestore";
-import { getAuth, GoogleAuthProvider } from 'firebase/auth';
-
+import { getAuth, GoogleAuthProvider, browserLocalPersistence} from 'firebase/auth';
 import 'firebaseui/dist/firebaseui.css'
 import { config } from "dotenv";
 config();
@@ -15,19 +14,15 @@ const firebaseConfig = {
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
     measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
-// const firebaseConfig = {
-//   apiKey: "AIzaSyCZodgmRgZsG-qgAZLm24J6q_dCS9Rm8Co",
-//   authDomain: "ratemyclasses-c70c2.firebaseapp.com",
-//   projectId: "ratemyclasses-c70c2",
-//   storageBucket: "ratemyclasses-c70c2.firebasestorage.app",
-//   messagingSenderId: "360721220097",
-//   appId: "1:360721220097:web:fc0f18b4c0e25e76a13600",
-//   measurementId: "G-2E6RF7X1M3"
-// };
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
-
+const googleProvider = new GoogleAuthProvider();
+// googleProvider.setCustomParameters({
+//     prompt: 'select_account'
+// })
+auth.setPersistence(browserLocalPersistence) 
 const uiConfig = {
     signInFlow: 'popup',
     callbacks: {
@@ -38,5 +33,5 @@ const uiConfig = {
     ],
 };
 
-export { db, app, auth, provider, uiConfig, firebaseConfig };
+export { db, app, auth, uiConfig, firebaseConfig, googleProvider };
 

@@ -1,7 +1,6 @@
 import {initializeApp} from 'firebase/app';
 import {getFirestore} from "firebase/firestore";
 import { getAuth, GoogleAuthProvider, browserLocalPersistence} from 'firebase/auth';
-import 'firebaseui/dist/firebaseui.css'
 import { config } from "dotenv";
 config();
 

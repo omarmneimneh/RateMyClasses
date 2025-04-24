@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { MoveRight } from "lucide-react";
 import {Footer, Header} from "@/src/app/components/lib/Layout";
 import Head from "next/head";
-import {ui} from "@/src/config/firebase";
 export default function Home() {
 
   return (

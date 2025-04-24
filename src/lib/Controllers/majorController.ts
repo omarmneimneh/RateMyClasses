@@ -79,7 +79,7 @@ class MajorController {
                 courseCount: increment(1)
             });
         } catch(e) {
-            return NextResponse.json({ message: `Internal server error, please try again later.` }, { status: 500 });
+            return NextResponse.json({ message: `Internal server error, please try again later. ${e}` }, { status: 500 });
         }
     }
 };

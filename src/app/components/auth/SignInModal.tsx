@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
-import Link from "next/link"
+
 import type React from "react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
@@ -13,18 +13,17 @@ import {
   browserLocalPersistence,
 } from "firebase/auth"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
+
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Mail, Lock, AlertCircle } from "lucide-react"
+import { AlertCircle } from "lucide-react"
 import { FcGoogle } from "react-icons/fc"
 import { FaFacebook, FaMicrosoft } from "react-icons/fa"
 import { useAuth } from "@/src/app/components/auth/AuthProvider"
@@ -36,7 +35,7 @@ export function SignInModal() {
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
-  const { user } = useAuth()
+
   const auth = getAuth()
   const googleProvider = new GoogleAuthProvider()
   const facebookProvider = new FacebookAuthProvider()

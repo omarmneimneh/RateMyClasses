@@ -1,5 +1,5 @@
 import {Class, Review} from "@/src/lib/types";
-import { NextResponse } from "next/server";
+
 
 
 /******************** Majors Portion of API ********************/

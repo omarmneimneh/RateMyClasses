@@ -1,14 +1,13 @@
 "use client"
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
+import { createContext, useContext,  } from "react"
 import {
-    signInWithPopup,
-    onAuthStateChanged,
+  
     signOut as firebaseSignOut,
     type User,
-    GoogleAuthProvider,
+
 } from "firebase/auth"
-import { auth, googleProvider } from "@/src/config/firebase"
+import { auth } from "@/src/config/firebase"
 
 // type AuthContextType = {
 //   user: User | null

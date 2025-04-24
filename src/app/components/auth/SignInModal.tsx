@@ -26,7 +26,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { AlertCircle } from "lucide-react"
 import { FcGoogle } from "react-icons/fc"
 import { FaFacebook, FaMicrosoft } from "react-icons/fa"
-import { useAuth } from "@/src/app/components/auth/AuthProvider"
+
 
 export function SignInModal() {
   const [open, setOpen] = useState(false)
